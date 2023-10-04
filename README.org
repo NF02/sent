@@ -1,0 +1,73 @@
+* sent is a simple plaintext presentation tool.
+
+sent does not need latex, libreoffice or any other fancy file format, it uses
+plaintext files to describe the slides and can include images via farbfeld.
+Every paragraph represents a slide in the presentation.
+
+The presentation is displayed in a simple X11 window. The content of each slide
+is automatically scaled to fit the window and centered so you also don't have to
+worry about alignment. Instead you can really concentrate on the content.
+
+** Dependencies
+
+You need Xlib and Xft to build sent and the farbfeld[0] tools installed to use
+images in your presentations.
+
+** Demo
+
+To get a little demo, just type
+#+begin_src bash
+	make && ./sent example
+#+end_src
+You can navigate with the arrow keys and quit with `q`.
+
+** Usage
+#+begin_src bash
+	sent [FILE]
+	#+end_src
+
+If FILE is omitted or equals `-`, stdin will be read. Produce image slides by
+prepending a `@` in front of the filename as a single paragraph. Lines starting
+with `#` will be ignored. A `\` at the beginning of the line escapes `@` and
+`#`. A presentation file could look like this:
+
+	sent
+	
+	@nyan.png
+	
+	depends on
+	* Xlib
+	* Xft
+	* farbfeld
+	
+	sent FILENAME
+	one slide per paragraph
+	# This is a comment and will not be part of the presentation
+	\# This and the next line start with backslashes
+	
+	\@FILE.png
+	
+	thanks / questions?
+
+** Patchs
+ * Progress Bar: This patch introduces a progress bar at the very bottom of
+   non-image slides. Similar to the slide numbers patch, it may be useful for
+   an audience to know how much more of a presentation they have to endure. One
+   way of measuring this is to add a bar to the slides which indicate the
+   presenter's progress based on slide count. by David Phillips david@sighup.nz
+ * Xresources: This patch adds the ability to configure sent via Xresources. At
+   startup, sent will read and apply the change to the applicable resource. Below
+   are the resources that can be changed and what they change:
+   * ~sent.font~: font being used on sent, support multiple fonts to define the fallbacks.
+   * ~sent.foreground~: foreground color
+   * ~sent.background~: background color
+*Note*: Values in Xresources will override values in config.h.
+ * Commandline Options: This patch adds extra command line options to sent for setting the
+   font and the background and foreground colors.
+#+begin_src bash
+	sent -f serif -c \#cc88cc -b gray90 ./example
+#+end_src
+
+** Development
+
+0: http://tools.suckless.org/farbfeld/
